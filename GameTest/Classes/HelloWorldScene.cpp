@@ -12,6 +12,8 @@
 
 #define ZORDER_SHOW_CARD 1
 
+#define ZORDER_MOVING_CARD 2
+
 USING_NS_CC;
 
 std::string CardSprite::getFileName(CardType cardType)
@@ -66,6 +68,45 @@ void CardSprite::onEnter()
     setTag(_posIndex.x + _posIndex.y * 5 + 1);
 }
 
+CardSprite* HelloWorld::getTouchCard(Touch *touch)
+{
+    for (int tag = 1; tag <= 10; tag++)
+    {
+        auto card = (CardSprite*)getChildByTag(tag);
+        if (card && card->getBoundingBox().containsPoint(touch->getLocation()))
+        {
+            return card;
+        }
+    }
+    return nullptr;
+}
+
+bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event)
+{
+    _firstCard = getTouchCard(touch);
+    if (_firstCard)
+    {
+        _firstCard->setLocalZOrder(ZORDER_MOVING_CARD);
+        return true;
+    }
+    return false;
+}
+
+void HelloWorld::onTouchMoved(Touch *touch, Event *unused_event)
+{
+    _firstCard->setPosition(_firstCard->getPosition() + touch->getDelta());
+}
+
+void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
+{
+    _firstCard = nullptr;
+}
+
+void HelloWorld::onTouchCancelled(Touch *touch, Event *unused_event)
+{
+    onTouchEnded(touch, unused_event);
+}
+
 Scene* HelloWorld::createScene()
 {
     auto scene = Scene::create();
@@ -83,6 +124,16 @@ bool HelloWorld::init()
     {
         return false;
     }
+    
+    auto listener = EventListenerTouchOneByOne::create();
+    listener->setSwallowTouches(true);
+    
+    listener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+    listener->onTouchMoved = CC_CALLBACK_2(HelloWorld::onTouchMoved, this);
+    listener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
+    listener->onTouchCancelled = CC_CALLBACK_2(HelloWorld::onTouchCancelled, this);
+    
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
     Size winSize = Director::getInstance()->getVisibleSize();
     //縦のサイズがなぜか合わないので+100
