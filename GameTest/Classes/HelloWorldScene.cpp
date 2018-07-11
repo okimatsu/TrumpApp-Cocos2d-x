@@ -55,7 +55,7 @@ void CardSprite::showNumber()
     auto number = Label::createWithSystemFont(numberString, "Arial", 96);
     number->setPosition(Point(getContentSize() / 2));
     number->setTextColor(Color4B::WHITE);
-    number->setSystemFontSize(40);
+    number->setSystemFontSize(30);
     addChild(number);
 }
 
@@ -72,27 +72,34 @@ void CardSprite::moveToInitPos()
 {
     float posX = CARD_1_POS_X + CARD_DISTANCE_X * _posIndex.x;
     float posY = CARD_1_POS_Y + CARD_DISTANCE_Y * _posIndex.y;
-    auto move = MoveTo::create(MOVING_TIME, Point(posX, posY));
-    auto scale1 = ScaleTo::create(MOVING_TIME / 2, 0, 1);
-    auto func1 = CallFunc::create([&](){
-        
-    });
     
+    
+    auto move = MoveTo::create(MOVING_TIME, Point(posX, posY));
+    
+    auto scale1 = ScaleTo::create(MOVING_TIME, 1); //この状態で生成　↓
+    auto func1 = CallFunc::create([&](){
+        setTexture(getFileName(_card.type));
+        showNumber();
+    });
+    auto scale2 = ScaleTo::create(MOVING_TIME, 0.7); //この状態に変化
+    auto seq1 = Sequence::create(scale1, func1, scale2, nullptr);
+    auto spawn = Spawn::create(move, seq1, nullptr);
+    runAction(spawn);
 };
 
 void CardSprite::onEnter()
 {
     Sprite::onEnter();
     
-   // setTexture(getFileName(_card.type));
+    // setTexture(getFileName(_card.type));
     setTexture("Trump.png");
-    showNumber();
+    // showNumber();
     
     float posX = CARD_1_POS_X + CARD_DISTANCE_X * _posIndex.x;
     float posY = CARD_1_POS_Y + CARD_DISTANCE_X * _posIndex.y;
     setPosition(posX, posY);
     setTag(_posIndex.x + _posIndex.y * 5 + 1);
-    setScale(0.7);
+    setScale(1);
 }
 
 CardSprite* HelloWorld::getTouchCard(Touch *touch)
@@ -233,7 +240,7 @@ void HelloWorld::createCard(PosIndex posIndex)
     auto card = CardSprite::create();
     card->setCard(getCard());
     card->setPosIndex(posIndex);
-
+    card->moveToInitPos();
     addChild(card, ZORDER_SHOW_CARD);
 }
 

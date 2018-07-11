@@ -32,7 +32,7 @@ protected:
     
 public:
     virtual bool init();
-    void onEnter() override;
+    void onEnter();
     
     CREATE_FUNC(CardSprite);
     
