@@ -68,11 +68,24 @@ bool CardSprite::init()
     return true;
 }
 
+void CardSprite::moveToInitPos()
+{
+    float posX = CARD_1_POS_X + CARD_DISTANCE_X * _posIndex.x;
+    float posY = CARD_1_POS_Y + CARD_DISTANCE_Y * _posIndex.y;
+    auto move = MoveTo::create(MOVING_TIME, Point(posX, posY));
+    auto scale1 = ScaleTo::create(MOVING_TIME / 2, 0, 1);
+    auto func1 = CallFunc::create([&](){
+        
+    });
+    
+};
+
 void CardSprite::onEnter()
 {
     Sprite::onEnter();
     
-    setTexture(getFileName(_card.type));
+   // setTexture(getFileName(_card.type));
+    setTexture("Trump.png");
     showNumber();
     
     float posX = CARD_1_POS_X + CARD_DISTANCE_X * _posIndex.x;

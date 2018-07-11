@@ -41,6 +41,7 @@ public:
     
     void moveBackToInitPos();
     void moveToTrash();
+    void moveToInitPos();
 };
 
 class HelloWorld : public cocos2d::Scene
