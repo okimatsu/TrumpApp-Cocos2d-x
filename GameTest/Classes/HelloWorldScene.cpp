@@ -6,13 +6,17 @@
 #define CARD_TYPE_NUM 4
 
 #define CARD_1_POS_X 50
-#define CARD_1_POS_Y 100 //7plusJust
+#define CARD_1_POS_Y 160 //7plusJust
 #define CARD_DISTANCE_X 95 //7plusJust
-#define CARD_DISTANCE_Y 120
+#define CARD_DISTANCE_Y 95
 
 #define ZORDER_SHOW_CARD 1
 
 #define ZORDER_MOVING_CARD 2
+
+#define MOVING_TIME 0.3
+
+#define TAG_TRUSH_CARD 11
 
 USING_NS_CC;
 
@@ -26,6 +30,15 @@ std::string CardSprite::getFileName(CardType cardType)
         default: filename = "SP.png"; break;
     }
     return filename;
+}
+
+void CardSprite::moveBackToInitPos()
+{
+    float posX = CARD_1_POS_X + CARD_DISTANCE_X * _posIndex.x;
+    float posY = CARD_1_POS_Y + CARD_DISTANCE_Y * _posIndex.y;
+    auto move = MoveTo::create(MOVING_TIME, Point(posX, posY));
+    
+    runAction(move);
 }
 
 void CardSprite::showNumber()
@@ -66,6 +79,7 @@ void CardSprite::onEnter()
     float posY = CARD_1_POS_Y + CARD_DISTANCE_X * _posIndex.y;
     setPosition(posX, posY);
     setTag(_posIndex.x + _posIndex.y * 5 + 1);
+    setScale(0.7);
 }
 
 CardSprite* HelloWorld::getTouchCard(Touch *touch)
@@ -73,7 +87,9 @@ CardSprite* HelloWorld::getTouchCard(Touch *touch)
     for (int tag = 1; tag <= 10; tag++)
     {
         auto card = (CardSprite*)getChildByTag(tag);
-        if (card && card->getBoundingBox().containsPoint(touch->getLocation()))
+        if (card &&
+            card != _firstCard &&
+            card->getBoundingBox().containsPoint(touch->getLocation()))
         {
             return card;
         }
@@ -99,6 +115,45 @@ void HelloWorld::onTouchMoved(Touch *touch, Event *unused_event)
 
 void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
 {
+    bool success = false;
+    
+    auto _secondSprite = getTouchCard(touch);
+    if (_secondSprite)
+    {
+        if (_firstCard->getCard().number + _secondSprite->getCard().number == 13)
+        {
+            success = true;
+        }
+    } else {
+        if (_firstCard->getCard().number == 13)
+        {
+            success = true;
+        }
+    }
+    
+    if (success)
+    {
+        if ((int)_cards.size() > 0)
+        {
+            createCard(_firstCard->getPosIndex());
+        }
+        _firstCard->moveToTrash();
+        if (_secondSprite)
+        {
+            if ((int)_cards.size() > 0)
+            {
+                createCard(_secondSprite->getPosIndex());
+            }
+            _secondSprite->moveToTrash();
+        }
+    } else {
+        _firstCard->moveBackToInitPos();
+        _firstCard->setLocalZOrder(ZORDER_SHOW_CARD);
+    }
+    
+   // _firstCard->moveBackToInitPos();
+   // _firstCard->setLocalZOrder(ZORDER_SHOW_CARD);
+    
     _firstCard = nullptr;
 }
 
@@ -145,12 +200,27 @@ bool HelloWorld::init()
     return true;
 }
 
+void CardSprite::moveToTrash()
+{
+    float posX = CARD_1_POS_X + CARD_DISTANCE_X * 4;
+    float posY = CARD_1_POS_Y - CARD_DISTANCE_Y;
+    auto move = MoveTo::create(MOVING_TIME, Point(posX, posY));
+    
+    auto func = CallFunc::create([&](){
+        this->setTag(TAG_TRUSH_CARD);
+    });
+    
+    auto seq = Sequence::create(move, func, nullptr);
+    runAction(seq);
+}
+
 void HelloWorld::createCard(PosIndex posIndex)
 {
     
     auto card = CardSprite::create();
     card->setCard(getCard());
     card->setPosIndex(posIndex);
+
     addChild(card, ZORDER_SHOW_CARD);
 }
 

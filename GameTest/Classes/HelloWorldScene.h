@@ -39,6 +39,8 @@ public:
     CC_SYNTHESIZE(Card, _card, Card);
     CC_SYNTHESIZE(PosIndex, _posIndex, PosIndex)
     
+    void moveBackToInitPos();
+    void moveToTrash();
 };
 
 class HelloWorld : public cocos2d::Scene
