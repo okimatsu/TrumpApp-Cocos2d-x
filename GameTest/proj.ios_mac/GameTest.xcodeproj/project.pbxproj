@@ -49,6 +49,7 @@
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
+		CE79A7CD20F5D22F00790748 /* Button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE79A7CB20F5D22F00790748 /* Button.png */; };
 		CE9AB15720F59A8400A919EA /* Trump.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9AB15620F59A8400A919EA /* Trump.png */; };
 		CE9C10AB20F4379200FB08CA /* CB.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C10A720F4379100FB08CA /* CB.png */; };
 		CE9C10AC20F4379200FB08CA /* SP.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9C10A820F4379100FB08CA /* SP.png */; };
@@ -141,6 +142,7 @@
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CE79A7CB20F5D22F00790748 /* Button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Button.png; sourceTree = "<group>"; };
 		CE9AB15620F59A8400A919EA /* Trump.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Trump.png; sourceTree = "<group>"; };
 		CE9C10A720F4379100FB08CA /* CB.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CB.png; sourceTree = "<group>"; };
 		CE9C10A820F4379100FB08CA /* SP.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SP.png; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				CE9C10A920F4379200FB08CA /* HT.png */,
 				CE9C10A820F4379100FB08CA /* SP.png */,
 				CE9AB15620F59A8400A919EA /* Trump.png */,
+				CE79A7CB20F5D22F00790748 /* Button.png */,
 				46880B7619C43A67006E1F66 /* CloseNormal.png */,
 				46880B7719C43A67006E1F66 /* CloseSelected.png */,
 				46880B7A19C43A67006E1F66 /* HelloWorld.png */,
@@ -436,6 +439,7 @@
 				CE9C10AC20F4379200FB08CA /* SP.png in Resources */,
 				46880B8119C43A67006E1F66 /* HelloWorld.png in Resources */,
 				1A88B2641FC3D9C9005C14AE /* Images.xcassets in Resources */,
+				CE79A7CD20F5D22F00790748 /* Button.png in Resources */,
 				CE9C10AB20F4379200FB08CA /* CB.png in Resources */,
 				46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */,
 				521A8EA919F11F5000D177D7 /* fonts in Resources */,

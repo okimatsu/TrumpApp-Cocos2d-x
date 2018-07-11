@@ -2,7 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
-
+#include "extensions/cocos-ext.h"
 
 enum CardType
 {
@@ -56,6 +56,10 @@ protected:
     void showInitCards();
     void initGame();
     CardSprite* getTouchCard(cocos2d::Touch *touch);
+    void showButton();
+    void initTrash();
+    void onTapButton(cocos2d::Ref* sender, cocos2d::extension::Control::EventType controlEvent);
+    void showBackCards();
     
 public:
     static cocos2d::Scene* createScene();

@@ -4,21 +4,20 @@
 
 #define CARD_NUM 13
 #define CARD_TYPE_NUM 4
-
 #define CARD_1_POS_X 50
 #define CARD_1_POS_Y 160 //7plusJust
 #define CARD_DISTANCE_X 95 //7plusJust
 #define CARD_DISTANCE_Y 95
-
 #define ZORDER_SHOW_CARD 1
-
 #define ZORDER_MOVING_CARD 2
-
 #define MOVING_TIME 0.3
-
 #define TAG_TRUSH_CARD 11
+#define TAG_BACK_CARD 12
+#define BUTTON_POS_X 50
+#define BUTTON_POS_Y 100
 
 USING_NS_CC;
+USING_NS_CC_EXT;
 
 std::string CardSprite::getFileName(CardType cardType)
 {
@@ -30,6 +29,16 @@ std::string CardSprite::getFileName(CardType cardType)
         default: filename = "SP.png"; break;
     }
     return filename;
+}
+
+void HelloWorld::showButton()
+{
+    auto button = ControlButton::create(Scale9Sprite::create("Button.png"));
+    button->setAdjustBackgroundImage(false);
+    button->setPosition(BUTTON_POS_X  * 3 , BUTTON_POS_Y - 35);
+    button->addTargetWithActionForControlEvents(this, cccontrol_selector(HelloWorld::onTapButton), Control::EventType::TOUCH_UP_INSIDE);
+    button->setTitleForState("", Control::State::NORMAL);
+    addChild(button);
 }
 
 void CardSprite::moveBackToInitPos()
@@ -72,12 +81,11 @@ void CardSprite::moveToInitPos()
 {
     float posX = CARD_1_POS_X + CARD_DISTANCE_X * _posIndex.x;
     float posY = CARD_1_POS_Y + CARD_DISTANCE_Y * _posIndex.y;
-    
-    
     auto move = MoveTo::create(MOVING_TIME, Point(posX, posY));
     
-    auto scale1 = ScaleTo::create(MOVING_TIME, 1); //この状態で生成　↓
+    auto scale1 = ScaleTo::create(MOVING_TIME / 2, 0, 1); //この状態で生成　↓
     auto func1 = CallFunc::create([&](){
+        
         setTexture(getFileName(_card.type));
         showNumber();
     });
@@ -116,6 +124,19 @@ CardSprite* HelloWorld::getTouchCard(Touch *touch)
     }
     return nullptr;
 }
+
+void HelloWorld::onTapButton(Ref *sender, Control::EventType controlEvent)
+{
+    initCards();
+    
+    showInitCards();
+    
+    showBackCards();
+    
+    initTrash();
+}
+
+
 
 bool HelloWorld::onTouchBegan(Touch *touch, Event *unused_event)
 {
@@ -157,6 +178,7 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
         {
             createCard(_firstCard->getPosIndex());
         }
+        
         _firstCard->moveToTrash();
         if (_secondSprite)
         {
@@ -236,14 +258,49 @@ void CardSprite::moveToTrash()
 
 void HelloWorld::createCard(PosIndex posIndex)
 {
+    float posX = CARD_1_POS_X;
+    float posY = CARD_1_POS_Y - CARD_DISTANCE_Y;
+    
+    CCLOG("%i", CARD_1_POS_Y);
     
     auto card = CardSprite::create();
     card->setCard(getCard());
+    card->setPosition(posX, posY);
     card->setPosIndex(posIndex);
     card->moveToInitPos();
     addChild(card, ZORDER_SHOW_CARD);
 }
 
+void HelloWorld::showBackCards() //山札
+{
+    auto backCards = getChildByTag(TAG_TRUSH_CARD);
+    if (!backCards)
+    {
+        float posX = CARD_1_POS_X;
+        float posY = CARD_1_POS_Y - CARD_DISTANCE_Y;
+        
+       // CCLOG("%i", CARD_1_POS_Y);
+        
+        backCards = Sprite::create("Trump.png");
+        backCards->setPosition(posX, posY);
+        backCards->setTag(TAG_BACK_CARD);
+        addChild(backCards);
+    }
+}
+
+void HelloWorld::initTrash()
+{
+    while (true)
+    {
+        auto card = getChildByTag(TAG_TRUSH_CARD);
+        if  (card)
+        {
+            card->removeFromParent();
+        } else {
+            break;
+        }
+    }
+}
 
 
 void HelloWorld::showInitCards()
@@ -272,9 +329,13 @@ void HelloWorld::showInitCards()
 
 void HelloWorld::initGame()
 {
-    initCards();
+   // initCards();
     
-    showInitCards();
+   // showInitCards();
+    
+    showButton();
+    
+    showBackCards();
 }
 
 void HelloWorld::initCards() //？
