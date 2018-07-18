@@ -13,8 +13,11 @@
 #define MOVING_TIME 0.3
 #define TAG_TRUSH_CARD 11
 #define TAG_BACK_CARD 12
+#define TAG_TIMER_LABEL 13
 #define BUTTON_POS_X 50
 #define BUTTON_POS_Y 100
+#define TIMER_LABEL_POS_X 300
+#define TIMER_LABEL_POS_Y 60
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -134,6 +137,12 @@ void HelloWorld::onTapButton(Ref *sender, Control::EventType controlEvent)
     showBackCards();
     
     initTrash();
+    
+    showTimerLabel();
+    
+    unscheduleUpdate();
+    
+    scheduleUpdate();
 }
 
 
@@ -327,6 +336,46 @@ void HelloWorld::showInitCards()
     }
 }
 
+void HelloWorld::showTimerLabel()
+{
+    _timer = 0;
+    
+    auto timerLabel = (Label*)getChildByTag(TAG_TIMER_LABEL);
+    if (!timerLabel)
+    {
+        timerLabel = Label::createWithSystemFont("", "Arial", 48);
+        timerLabel->setPosition(TIMER_LABEL_POS_X, TIMER_LABEL_POS_Y);
+        timerLabel->setTag(TAG_TIMER_LABEL);
+        timerLabel->setTextColor(Color4B::BLACK);
+        addChild(timerLabel);
+    }
+    timerLabel->setString(StringUtils::format("%0.2fs", _timer));
+}
+
+void HelloWorld::update(float dt)
+{
+    _timer += dt;
+    auto timerLabel = (Label*)getChildByTag(TAG_TIMER_LABEL);
+    if(timerLabel)
+    {
+        timerLabel->setString(StringUtils::format("%0.2fs", _timer));
+    }
+    bool finish = true;
+    for (int tag = 1; tag <= 10; tag++)
+    {
+        auto node = getChildByTag(tag);
+        if (node)
+        {
+            finish = false;
+            break;
+        }
+    }
+    if (finish)
+    {
+        unscheduleUpdate();
+    }
+}
+
 void HelloWorld::initGame()
 {
    // initCards();
@@ -336,6 +385,8 @@ void HelloWorld::initGame()
     showButton();
     
     showBackCards();
+    
+    showTimerLabel();
 }
 
 void HelloWorld::initCards() //？
